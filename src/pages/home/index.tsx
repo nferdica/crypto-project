@@ -1,6 +1,7 @@
 import { useState, FormEvent, useEffect } from 'react'
 import styles from './home.module.css'
 import { BsSearch } from 'react-icons/bs'
+import { GoArrowDown } from "react-icons/go";
 import { Link, useNavigate } from 'react-router-dom'
 
 export interface CoinProps{
@@ -102,11 +103,11 @@ export function Home() {
 
           <thead>
             <tr>
-              <th scope='col'>Moeda</th>
-              <th scope='col'>Valor de mercado</th>
-              <th scope='col'>Preço</th>
-              <th scope='col'>Volume</th>
-              <th scope='col'>24 horas</th>
+              <th scope='col'>Name</th>
+              <th scope='col'>Market Cap</th>
+              <th scope='col'>Price</th>
+              <th scope='col'>Volume (24Hr)</th>
+              <th scope='col'>Change (24Hr)</th>
             </tr>
           </thead>
 
@@ -119,7 +120,7 @@ export function Home() {
                <div className={styles.name}>
                 <img className={styles.logo} src={`https://assets.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png`} alt="Logo crypto" />
                  <Link to={`/detail/${item.id}`}>
-                   <span>{item.name}</span> | {item.symbol}
+                   <span>{item.symbol}</span>
                  </Link>
                </div>
              </td>
@@ -146,10 +147,12 @@ export function Home() {
           </tbody>
 
         </table>
-
-        <button className={styles.buttonMore} onClick={handleGetMore}>
-          Carregar mais
-        </button>
+        
+        <div className='buttonContainer'>
+          <button className={styles.buttonMore} onClick={handleGetMore}>
+            <GoArrowDown size={30} color='#FFF'/>
+          </button>
+        </div>
 
       </main>
     )

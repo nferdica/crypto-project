@@ -72,12 +72,26 @@ table th, table td {
     font-weight: bold;
 }
 
+.buttonContainer {
+    width: 100%;
+    display: block;
+    align-items: center;
+    justify-content: center;
+}
+
 .buttonMore {
-    background-color: #30BEFF;
-    padding: 8px 24px;
+    width: 100%;
+    font-weight: bold;
+    background-color: #18171C;
+    padding: 10px 20px;
     color: #FFF;
     margin: 14px 0;
     border-radius: 8px;
+    transition: 1s;
+}
+
+.buttonMore:hover {
+    background-color: #1D1C20;
 }
 
 .logo {
