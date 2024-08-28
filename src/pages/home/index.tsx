@@ -16,6 +16,9 @@ interface CoinProps{
   marketCapUsd: string;
   volumeUsd24Hr: string;
   explorer: string;
+  formatedPrice?: string;
+  formatedMarket?: string;
+  formatedVolume?: string;
 }
 
 interface DataProps{
@@ -42,17 +45,25 @@ export function Home() {
           currency: 'USD'
         })
 
+        const priceCompact = Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          notation: 'compact'
+        })
+
         const formatedResult = coinsData.map((item) => {
           const formated = {
             ...item,
-            formatedPrice: price.format(Number(item.priceUsd))
+            formatedPrice: price.format(Number(item.priceUsd)),
+            formateMarket: priceCompact.format(Number(item.marketCapUsd)),
+            formatedVolume: priceCompact.format(Number(item.volumeUsd24Hr))
           }
 
           return formated;
 
         })
 
-        console.log(formatedResult)
+        setCoins(formatedResult);
 
       })
     }
@@ -91,33 +102,36 @@ export function Home() {
 
           <tbody id='tbody'>
 
-            <tr className={styles.tr}>
+           {coins.length > 0 && coins.map((item) => (
+             <tr className={styles.tr} key={item.id}>
 
-              <td className={styles.tdlabel} data-label="Moeda">
-                <div className={styles.name}>
-                  <Link to={'/detail/bitcoin'}>
-                    <span>Bitcoin</span> | BTC
-                  </Link>
-                </div>
-              </td>
+             <td className={styles.tdlabel} data-label="Moeda">
+               <div className={styles.name}>
+                <img className={styles.logo} src={`https://assets.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png`} alt="Logo crypto" />
+                 <Link to={`/detail/${item.id}`}>
+                   <span>{item.name}</span> | {item.symbol}
+                 </Link>
+               </div>
+             </td>
 
-              <td className={styles.tdlabel} data-label="Market Cap">
-                1T
-              </td>
+             <td className={styles.tdlabel} data-label="Market Cap">
+               {item.formatedMarket}
+             </td>
 
-              <td className={styles.tdlabel} data-label="Price">
-                8.000
-              </td>
+             <td className={styles.tdlabel} data-label="Price">
+               {item.formatedPrice}
+             </td>
 
-              <td className={styles.tdlabel} data-label="Volume">
-                2B
-              </td>
+             <td className={styles.tdlabel} data-label="Volume">
+               {item.formatedVolume}
+             </td>
 
-              <td className={styles.tdProfit} data-label="Change (24hr)">
-                <span>1.20</span>
-              </td>
+             <td className={Number(item.changePercent24Hr) > 0 ? styles.tdProfit : styles.tdLoss} data-label="Change (24hr)">
+               <span>{Number(item.changePercent24Hr).toFixed(2) + ' %'}</span>
+             </td>
 
-            </tr>
+           </tr>
+           ))}
 
           </tbody>
 
