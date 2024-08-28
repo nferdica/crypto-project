@@ -3,7 +3,7 @@ import styles from './home.module.css'
 import { BsSearch } from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom'
 
-interface CoinProps{
+export interface CoinProps{
   id: string;
   name: string;
   symbol: string;
@@ -28,14 +28,16 @@ interface DataProps{
 export function Home() {
     const [input, setInput] = useState('');
     const [coins, setCoins] = useState<CoinProps[]>([]);
+    const [offset, setOffset] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
       getData();
-    }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [offset])
 
     async function getData() {
-      fetch('https://api.coincap.io/v2/assets?limit=10&offset=0')
+      fetch(`https://api.coincap.io/v2/assets?limit=10&offset=${offset}`)
       .then(response => response.json())
       .then((data: DataProps) => {
         const coinsData = data.data;
@@ -55,7 +57,7 @@ export function Home() {
           const formated = {
             ...item,
             formatedPrice: price.format(Number(item.priceUsd)),
-            formateMarket: priceCompact.format(Number(item.marketCapUsd)),
+            formatedMarket: priceCompact.format(Number(item.marketCapUsd)),
             formatedVolume: priceCompact.format(Number(item.volumeUsd24Hr))
           }
 
@@ -63,7 +65,9 @@ export function Home() {
 
         })
 
-        setCoins(formatedResult);
+        const listCoins = [...coins, ...formatedResult]
+        setCoins(listCoins);
+        console.log(listCoins)
 
       })
     }
@@ -75,6 +79,12 @@ export function Home() {
     }
 
     function handleGetMore() {
+      if(offset === 0) {
+        setOffset(10)
+        return;
+      }
+
+      setOffset(offset + 10)
 
     }
 
